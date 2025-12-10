@@ -54,4 +54,4 @@ while c < cols:
 
     solution += val
 
-print(f"day 5 part 1: {solution}")
+print(f"day 6 part 1: {solution}")
