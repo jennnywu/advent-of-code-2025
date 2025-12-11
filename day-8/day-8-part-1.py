@@ -1,0 +1,62 @@
+with open("day-8/input.txt") as f:
+    input = f.read().splitlines()
+
+points = []
+for line in input:
+    x, y, z = map(int, line.split(","))
+    points.append((x, y, z))
+
+def distance(a, b):
+    dx = a[0] - b[0]
+    dy = a[1] - b[1]
+    dz = a[2] - b[2]
+    
+    return ((dx ** 2) + (dy ** 2) + (dz ** 2)) ** 0.5
+
+pairs = []
+n = len(points)
+
+for i in range(n):
+    for j in range(i + 1, n):
+        d = distance(points[i], points[j])
+        pairs.append((d, i, j))
+
+pairs.sort()
+
+parent = list(range(n))
+size = [1] * n
+
+def find(x):
+    while parent[x] != x:
+        parent[x] = parent[parent[x]]
+        x = parent[x]
+    
+    return x
+
+def union(a, b):
+    ra = find(a)
+    rb = find(b)
+
+    if ra != rb:
+        if size[ra] < size[rb]:
+            ra, rb = rb, ra
+
+        parent[rb] = ra
+        size[ra] += size[rb]
+
+for k in range(1000):
+    _, a, b = pairs[k]
+    k += 1
+    if find(a) != find(b):
+        union(a, b)
+
+components = {}
+
+for i in range(n):
+    r = find(i)
+    components[r] = components.get(r, 0) + 1
+
+sizes = sorted(components.values(), reverse=True)
+answer = sizes[0] * sizes[1] * sizes[2]
+
+print(f"day 8 part 1: {answer}")
