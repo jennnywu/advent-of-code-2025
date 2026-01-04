@@ -15,19 +15,17 @@ while i < len(input) and input[i].strip() != "":
 
 ranges.sort()
 
-merged = []
+start, end = ranges[0]
 
-for lo, hi in ranges:
-    if not merged:
-        merged.append([lo, hi])
+for i in ranges[1:]:
+    next_start, next_end = i
+
+    if next_start <= end:
+        end = max(end, next_end)
     else:
-        prev_lo, prev_hi = merged[-1]
-        if lo <= prev_hi + 1:
-            merged[-1][1] = max(prev_hi, hi)
-        else:
-            merged.append([lo, hi])
+        count += end - start + 1
+        start, end = next_start, next_end
 
-for lo, hi in merged:
-    count += hi - lo + 1
+count += end - start + 1
 
 print(f"day 5 part 2: {count}")
